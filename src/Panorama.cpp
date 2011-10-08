@@ -46,20 +46,28 @@ Matrix<float> getHomography(const vector<IntPoint2>& pts1,
   Vector<float> B(2*n);
 
   for (int i = 0; i < n; i++) {
-    IntPoint2 p2 = pts1[i];
-    IntPoint2 p1 = pts2[i];
+    IntPoint2 p1 = pts1[i];
+    IntPoint2 p2 = pts2[i];
 
-    B[2*i] = -p2.y();
-    B[2*i+1] = 1;
+    B[2*i] = p2.x();
+    B[2*i+1] = p2.y();
 
-    A(2*i, 0) = 0;             A(2*i+1, 0) = p1.x();
-    A(2*i, 1) = 0;             A(2*i+1, 1) = p1.y();
-    A(2*i, 2) = 0;             A(2*i+1, 2) = 1;
-    A(2*i, 3) = -p1.x();       A(2*i+1, 3) = 0;
-    A(2*i, 4) = -p1.y();       A(2*i+1, 4) = 0;
-    A(2*i, 5) = -1;            A(2*i+1, 5) = 0;
-    A(2*i, 6) = p2.y()*p1.x(); A(2*i+1, 6) = -p2.x()*p1.x();
-    A(2*i, 7) = p2.y()*p1.y(); A(2*i+1, 7) = -p2.x()*p1.y();
+    A(2*i, 0) = p1.x();
+    A(2*i, 1) = p1.y();
+    A(2*i, 2) = 1;
+    A(2*i, 3) = 0;
+    A(2*i, 4) = 0;
+    A(2*i, 5) = 0;
+    A(2*i, 6) = -p2.x()*p1.x();
+    A(2*i, 7) = -p2.x()*p1.y();
+    A(2*i+1, 0) = 0;
+    A(2*i+1, 1) = 0;
+    A(2*i+1, 2) = 0;
+    A(2*i+1, 3) = p1.x();
+    A(2*i+1, 4) = p1.y();
+    A(2*i+1, 5) = 1;
+    A(2*i+1, 6) = -p2.y()*p1.x();
+    A(2*i+1, 7) = -p2.y()*p1.y();
 
     i++;
   }
