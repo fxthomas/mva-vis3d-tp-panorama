@@ -68,8 +68,6 @@ Matrix<float> getHomography(const vector<IntPoint2>& pts1,
     A(2*i+1, 5) = 1;
     A(2*i+1, 6) = -p2.y()*p1.x();
     A(2*i+1, 7) = -p2.y()*p1.y();
-
-    i++;
   }
 
   B = linSolve(A, B);
@@ -127,15 +125,17 @@ void panorama(const Image<Color,2>& I1, const Image<Color,2>& I2,
   cout << "x0 x1 y0 y1=" << x0 << ' ' << x1 << ' ' << y0 << ' ' << y1<<endl;
 
   // Create panorama
+  Matrix<float> Hi = inverse(H);
   Image<Color> I(int(x1-x0), int(y1-y0));
   setActiveWindow( openWindow(I.width(), I.height()) );
   I.fill(WHITE);
 
-  for (int i = 0; i < I2.width(); i++) for (int j = 0; j < I2.height(); j++) I(i-int(x0),j-int(y0)) = I2(i,j);
-  /*for (int i = 0; i < I1.width(); i++) for (int j = 0; j < I1.height(); j++) {
-    v[0] = i; v[1] = j; v[2] = 1; v = H*v; v /= v[2];
-    I(int(v[0]), int(v[1])) = I1(i,j);
-  }*/
+  for (int x = 0; x < I.width(); x++) for (int y = 0; y < I.height(); y++) {
+    v[0] = x+x0; v[1] = y+y0; v[2] = 1;
+    if (v[0] > 0 && v[1] > 0 && v[0] < I2.width() && v[1] < I2.height()) I(x,y) = I2.interpolate(v[0], v[1]);
+    v = Hi*v; v /= v[2]; v /= v[2];
+    if (v[0] > 0 && v[1] > 0 && v[0] < I1.width() && v[1] < I1.height()) I(x,y) = I1.interpolate(v[0], v[1]);
+  }
 
   display(I,0,0);
 }
