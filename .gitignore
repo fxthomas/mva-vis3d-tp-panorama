@@ -1,0 +1,8 @@
+Panorama
+build/CMakeCache.txt
+build/CMakeFiles/
+build/Makefile
+build/cmake_install.cmake
+build/devel_environment.tcsh
+build/usr_environment.tcsh
+doc/
